@@ -30,9 +30,24 @@ app.get("/bookings/:id", (req, res) => {
 app.post("/bookings", (req, res) => {
   const newBooking = {
     id: bookings.length + 1,
-    roomId: bookings.length + 10,
     title: req.body.title,
+    firstName: req.body.firstName,
+    surname: req.body.surname,
+    email: req.body.email,
+    roomId: bookings.length + 10,
+    checkInDate: req.body.checkInDate,
+    checkOutDate: req.body.checkOutDate
   };
+
+  !newBooking.title ||
+  !newBooking.firstName ||
+  !newBooking.surname || 
+  !newBooking.email ||
+  !newBooking.checkInDate ||
+  !newBooking.checkOutDate ?
+  res.status(400).json({ mgs: `Please fill in all required details for a booking.`}) : 
+  bookings.push(newBooking);
+  res.json(bookings);
 });
 
 // TODO add your routes and helper functions here
