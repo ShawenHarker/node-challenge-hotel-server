@@ -14,18 +14,11 @@ app.get("/", (req, res) => res.send("Hotel booking server.  Ask for /bookings, e
 app.get("/bookings", (req, res) => res.json(bookings));
 
 app.get("/bookings/:id", (req, res) => {
-  const found = bookings.some(
-    (booking) => booking.id === parseInt(req.params.id)
-  );
+  const found = bookings.some(booking => booking.id === parseInt(req.params.id));
 
-  if (found) {
-    res.json(
-      bookings.filter((booking) => booking.id === parseInt(req.params.id))
-    );
-  } else {
-    res.status(404).json({ mgs: `No id of ${req.params.id} is found` });
-  }
-})
+  found ? res.json(bookings.filter(booking => booking.id === parseInt(req.params.id))) : 
+  res.status(404).json({ mgs: `No id of ${req.params.id} is found` });
+});
 
 app.post("/bookings", (req, res) => {
   const newBooking = {
@@ -48,6 +41,15 @@ app.post("/bookings", (req, res) => {
   res.status(400).json({ mgs: `Please fill in all required details for a booking.`}) : 
   bookings.push(newBooking);
   res.json(bookings);
+});
+
+app.delete("/bookings/delete/:id?", (req, res) => {
+  const found = bookings.some(booking => booking.id === parseInt(req.params.id));
+
+  found
+    ? res.json({ msg: `ID of ${req.params.id} has been deleted.`,
+      bookings: bookings.filter(booking => booking.id !== parseInt(req.params.id)) })
+    : res.status(404).json({ mgs: `No id of ${req.params.id} was found.` });
 });
 
 // TODO add your routes and helper functions here
